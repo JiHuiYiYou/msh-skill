@@ -1,0 +1,55 @@
+生词
+traffic congestion 交通拥堵
+emissions 排放
+approached 接近
+foster 促进
+extensive 广泛的
+bike lanes 自行车道
+sprawling 蔓延的
+suburban 城郊的
+neighborhoods 居民区
+plot of land 地块
+
+
+13）
+celebrate finishing my thesis.->B. A place to celebrate a special occasion 错因：没听到celebrate，只听到和谁什么结束论题。所以选了D(advisor
+
+
+24）
+It's essential to prioritize sleep
+and adopt good sleep hygiene practices such as
+maintaining a regular sleep schedule, avoiding
+caffeine and electronic screens before bedtime, and
+creating a comfortable sleep environment. By doing
+so, individuals can improve their cognitive function
+and overall well being.
+
+重要的是要优先考虑睡眠，采取良好的睡眠卫生习惯，如保持有规律的睡眠时间表，睡前避免咖啡因和电子屏幕，创造一个舒适的睡眠环境。通过这样做，个人可以改善他们的认知功能和整体健康。
+B. Maintain a regular sleep schedule​
+
+→ “保持规律的睡眠时间表”——原文明确写出“adopt good sleep hygiene practices such as maintaining a regular sleep schedule”，完全匹配，是正确答案。
+
+C. Avoid all caffeine consumption​
+
+→ “避免所有咖啡因摄入”——原文说的是“avoiding caffeine...before bedtime”，不是“all”，选错是因为忽略了程度副词，属于绝对化错误。
+
+错因：没有注意all，做得太快了，疏忽了。大概看了一眼，听到了咖啡因，就选了C。没仔细读题。
+
+14）
+A. They are better planned than most cities.​
+
+❌ 错误。文中明确说“如果城市有 thoughtful planning”，是可以改善的；而郊区被描述为“sprawling”“需要大量地块”，暗示规划不如城市紧凑高效。无证据支持“更好规划”。
+
+B. They are less environmentally friendly than cities.​
+
+✅ 正确。文中明确说“郊区发展需要大片土地、道路、停车场”，“对比之下，城市集中布局能保护自然区域和农田”，“城市化（合理规划下）更环保”。这直接支持“郊区不如城市环保”。
+
+C. They help preserve farmland and natural areas.​
+
+❌ 错误。文中明确说“郊区发展会占用土地”，而“城市集中布局才能保护农田和自然区域”。所以郊区恰恰是破坏者，不是保护者。
+
+D. They use land more efficiently than cities.​
+
+❌ 错误。文中说“郊区需要大片地块”，“城市集中布局最小化用地”，说明郊区土地效率更低。
+
+错因：直觉感觉郊区更环保，实际上原文说的其实是城市更环保（人均角度，资源密集）。这里其实是对文章内容把控的问题

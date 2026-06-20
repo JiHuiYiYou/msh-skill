@@ -1,0 +1,80 @@
+生词+翻译+错因分析
+M1
+1）……真的是忘记带上耳机了，纯蒙的，其实我会
+13）这个是犹豫了一下，结果没时间了，当时在想AB选项是分别是男生说的还是女生说的
+awfully 可怕的
+20）
+前半句说：Scott Hall原来的多功能室（用于社团会议）现在变成了电脑实验室，不能再开会了。后半句紧接着提到：Student Center的会议室仍然可用，因为原来的地方不能用了，所以说话人马上提供一个新的地点作为替代，以免学生不知道去哪里开会。
+A. 指出新计算机实验室的位置 —— 错误，文中已说明实验室在Scott Hall。
+B. 提供社团会议的替代地点 —— 正确，完全符合上述逻辑。
+C. 解释如何找到Scott Hall —— 错误，文中未提及找路的方法。
+D. 告诉学生去哪里参加平面设计研讨会 —— 错误，文中只说实验室有设计软件，未提及“研讨会”。
+
+23）
+aversion n. 厌恶，憎恶；讨厌的人（或东西）网络反感 /厌恶 /讨厌的事
+disproportionately adv.不成比例的
+另一个因素是现时偏差，即个人过分看重即时回报而忽视未来收益。这会导致很难为退休存钱，并导致人们过度消费
+首先提出概念：Present bias（现时偏差）。
+然后解释定义：重视眼前奖励胜过未来利益。
+最后给出例子/后果：很难存退休金（hard to save for retirement）。
+文中明确使用了 “This can make it hard to save for retirement” 来解释 present bias 带来的具体影响。
+因此，提到“为退休存钱”是为了展示（demonstrate）现时偏差（present bias）的影响。
+25）
+这段播客主要讨论了“生物黑客（Biohacking）”：
+定义：一种越来越流行的、自我指导的提升身心表现的方法，但通常缺乏充分的科学支持。
+具体做法：
+间歇性禁食：调节能量和代谢。
+认知增强剂（如绿茶提取物）：声称能改善记忆、注意力和专注力（但长期数据缺乏）。
+追踪睡眠模式：使用可穿戴设备监测睡眠，改善睡眠质量。
+声景和光线：利用声音或光线影响脑波和睡眠周期。
+核心态度：虽然很多方法很流行，但研究人员强调需要更严格的大规模研究来确定其安全性和有效性。不过，调整光线似乎是目前最受研究支持的方法。
+
+A. The Long History of Biohacking（生物黑客的悠久历史）
+错误。文章开头说是“increasingly popular”（越来越流行），并未提及悠久历史。
+
+B. Biohacking Practices: Scientifically Sound?（生物黑客实践：科学上可靠吗？）
+正确。​ 文章既介绍了各种流行的做法（Practices），又反复提到这些方法“lack full scientific support”（缺乏充分科学支持）、“need for more rigorous... studies”（需要更严格的研究）。这个标题完美概括了文章的讨论核心——介绍这些做法并质疑其科学依据。
+
+C. Improve Your Mood Through Biohacking（通过生物黑客改善情绪）
+错误。文章提到了情绪（mood），但这只是其中一个很小的细节，不能概括全文。
+
+D. Hack Your Way to Better Sleep（入侵你的方式以获得更好睡眠）
+错误。睡眠只是文章后半部分的一个重点，不能涵盖前面的饮食、绿茶提取物等其他内容，过于片面。
+26）
+“Certain types of substances that are considered cognitive enhancers are another cornerstone of biohacking. Green tea, for example. Taking green tea extract is supposed to improve memory, attention and focus.”（某些被认为是认知增强剂的物质是生物黑客的另一个基石。例如绿茶。服用绿茶提取物应该能改善记忆、注意力和专注力。）
+
+A. To improve mental functioning（改善心理/精神功能）
+正确。​ 记忆、注意力、专注力都属于“mental functioning（精神功能/认知功能）”的范畴。
+
+B. To strengthen sleep-wake cycles（加强睡眠-觉醒周期）
+错误。这是后面讲光线和睡眠时提到的，与绿茶无关。
+
+C. To lower heart rates（降低心率）
+错误。文中未提及。
+
+D. To support metabolic efficiency（支持代谢效率）
+错误。文中提到“间歇性禁食”有助于调节代谢（metabolic efficiency），而不是绿茶。这是典型的张冠李戴。
+
+错因：都听到了，但是我也想不起来哪个是促进新陈代谢，哪个是改善心理，精神功能
+M2
+4）
+错因：感觉很简单啊，不知道当时咋就选错了
+7）
+ "What does the woman recommend..."（女士推荐男士做什么）。
+在对话的最后，男士提到父母来看他的画展，女士回应说："And you should take your parents to the Italian place on Front St. it's really good."（你应该带父母去Front街的那家意大利餐厅，真的很不错。）
+A. Eat at a restaurant（在餐厅吃饭）：完全对应 "Italian place"（意大利餐厅），这是女士给出的明确建议。
+B. Visit an art museum（参观艺术博物馆）：这是男士自己要带父母去的地方（"they want to see them"），不是女士推荐的。
+C. Bring them to an Italian class（带他们去上意大利语课）：原文是 "Italian place"（餐厅），不是 "Italian class"（课程），属于偷换概念。
+D. Listen to a band（听乐队表演）：这是男士原本想去但去不成的音乐节，与带父母的建议无关。
+错因：只听到了Italian，后面具体是什么没注意没听到
+15）
+“Understanding and mitigating ocean acidification is essential... Additionally, protecting ecosystems like seagrass beds and mangroves can help absorb carbon dioxide and buffer acidification.”（此外，保护海草床和红树林等生态系统有助于吸收二氧化碳并缓冲酸化。）
+探讨海洋酸化的危害及应对措施。
+在提到“减少二氧化碳排放”之后，作者补充说明了另一种应对方法——“保护特定生态系统”。
+文中明确指出红树林（mangroves）的作用是“absorb carbon dioxide”（吸收二氧化碳）和“buffer acidification”（缓冲酸化），这正是一种缓解（mitigate）酸化的具体手段。
+
+A. 识别最容易受酸化影响的生物 —— 文中是将红树林作为解决方案提出，而非受害者。
+C. 描述海洋生态系统中的共生关系 —— 文中未提及共生关系。
+D. 强调海洋生物多样性的重要性 —— 虽然保护生态系统有利于生物多样性，但在此处的具体语境中，作者提及红树林的直接目的是为了说明其“固碳抗酸化”的功能，而非泛泛谈论生物多样性。
+
+错因：没有听到mangroves

@@ -1,0 +1,140 @@
+填词题
+M1[1]
+consists 由……构成
+M1[2]
+associated 相关的
+frequency 频率
+M2[1]
+voyages 航海
+ocean 海洋
+meticulously 一丝不苟的
+
+
+M1
+8)最准确描述ESEM本质
+B.它利用多学科的资源来完成它的目标。->正确
+D. It is also known as geoengineering.​
+
+→ 错误。Geoengineering 是ESEM的一种技术手段或子领域，而非同义词。ESEM 更广泛，包含规划、管理、跨学科协作；geoengineering 更侧重气候干预技术。
+
+9)问的是“两种地球工程（geoengineering）技术的根本区别
+
+SRM​ 的目标是 “to reflect sunlight into space to cool the planet” → 通过反射太阳光来给地球降温 → 应对的是“变暖的结果/表现”
+
+CDR​ 的目标是 “reducing greenhouse gas concentrations” → 通过植树、海洋施肥、直接空气捕集等方式减少大气中温室气体 → 针对的是“变暖的根本原因”
+
+→ 所以，SRM治标，CDR治本。这就是根本区别。
+B. SRM injects aerosols into the stratosphere, while CDR deploys reflective mirrors.​
+
+→ 错误。这是把具体技术手段混为一谈。实际上，“注入气溶胶”和“部署反射镜”都是 SRM 的具体方法；而 CDR 的方法是植树、碳捕集等。选项把手段当成了分类标准，且张冠李戴。
+D. SRM reduces the effects of global warming, while CDR reduces its causes.​
+
+→ 正确！​
+
+这正是文段中隐含的逻辑主线：SRM 通过反射阳光来“缓解变暖效应”，CDR 通过减少 CO₂ 来“根除变暖原因”。这是最本质、最宏观的区别。
+
+
+10)
+
+feasibility ˌfiːzəˈbɪləti
+简明释义
+n. 可行性，可能性
+网络释义
+可行性
+可用性
+可行的
+可行性研究
+
+workability ˌwɜːkəˈbɪlətɪ
+简明释义
+n. 可使用性；施工性能；可加工性
+网络释义
+可使用性
+可加工性
+可行性
+加工单
+
+
+13)
+anomalies 
+简明释义
+n. 异常现象，反常现象（anomaly 复数形式）
+网络释义
+异常现象
+异常
+异常的因果情况
+第一章
+inconsistencies 
+简明释义
+矛盾
+网络释义
+不一致
+前后不一致
+falsehood 
+简明释义
+n. 虚假，不真实；假话，谎言；说谎；谬误
+网络释义
+虚假
+虚伪
+谎言
+假值
+anomalies”在专业语境中 ≈ “异常值/不一致/偏离常规”
+
+14）
+A. It involves the way functions and signals are represented.​
+
+→ 原文首句：“Harmonic analysis studies how functions or signals can be represented as combinations of basic waves...”
+
+✅ 完全对应，正确提及。
+
+B. It has practical uses in several areas.​
+
+→ 原文：“This field has applications in signal processing, quantum mechanics, and data compression.”
+
+→ 还提到音乐、金融数据异常检测等。
+
+✅ 明确说明有多个实际应用领域，正确提及。
+
+C. It can reveal unseen structures in complex signals.​
+
+→ 原文：“One intriguing aspect is its ability to reveal hidden structures within complex signals, such as identifying...”
+
+✅ “hidden structures” = “unseen structures”，原文直接对应。
+
+D. It is more effective in music than in finance.​
+
+→ 原文提到在音乐中可识别基频，在金融中可检测异常——两者都作为例子列出，平级并列，从未比较“哪个更有效”。
+
+❌ 此为无中生有、主观比较，原文未提及，是错误选项。
+16）作者为什么在第二段提到“量子力学”？【写作意图/修辞目的题】
+A. To explain why the Fourier transform is a key tool of harmonic analysis​
+
+→ “解释为什么傅里叶变换是调和分析的关键工具”
+
+✘ 不对。作者在第一句就已经点明“傅里叶变换是关键工具”，后面是举例说明它怎么用，不是“解释为什么它是关键工具”。
+
+B. To illustrate an application of breaking down functions into their constituent frequencies​
+
+→ “为了说明将函数分解为其组成频率的一个应用”
+
+✔️ 正确！
+
+作者提到量子力学，就是举一个“分解函数/波函数”的实际应用场景 —— 和前面信号处理并列，都是“应用示例”。
+
+C. To highlight an important difference between signal processing and quantum mechanics​
+
+→ “突出信号处理与量子力学的重要区别”
+
+✘ 文中没有比较区别，更没有强调“不同”，而是强调“同样适用”。
+
+D. To demonstrate the challenge of analyzing and predicting quantum systems​
+
+→ “为了展示分析和预测量子系统的挑战”
+
+✘ 文中说“allowing for the analysis and prediction”，是说傅里叶变换帮助分析预测，不是强调“挑战”。
+
+M2
+
+6）
+Instead of flying to warmer climes in winter, they shelter​ in snow burrows and reduce activity to conserve energy.
+冬天它们不飞往温暖的地方，而是在雪洞中 shelter，并减少活动以保存能量。->寻求保护
