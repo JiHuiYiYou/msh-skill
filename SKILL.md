@@ -1,6 +1,6 @@
 ---
 name: msh-exam-analysis
-description: 模考错题分析（名师汇出国 / mingshihuichuguo.com）。拿到考试 URL 后，按"手写版"人味风格产出阅读/听力错题分析 txt 到桌面。When the user mentions 错题分析 / 模考 / homework/student/ URL from mingshihuichuguo, use this skill.
+description: 模考错题分析（名师汇出国 / mingshihuichuguo.com）。用户必须提供 mingshihuichuguo.com/homework/student/<id> 网址（如 https://mingshihuichuguo.com/homework/student/10833），skill 按"手写版"人味风格产出阅读/听力错题分析 txt 到桌面。粘贴错题内容不触发。When the user mentions 错题分析 / 模考 / pastes a mingshihuichuguo URL, use this skill.
 type: project
 ---
 
@@ -18,7 +18,141 @@ type: project
 
 - "做一下模考错题分析" + 给 URL
 - "分析一下这次的错题" + 给 URL
-- 粘贴错题相关内容
+- 直接粘贴 `https://mingshihuichuguo.com/homework/student/<id>` 网址
+
+**注意：粘贴错题内容（不含 URL）不触发**，必须给完整 URL。
+
+
+## 开始前必问
+
+skill 触发后第一件事——**先问清楚再动手**，禁止直接抓数据。
+
+### Step 1：环境探测（自动，**不要问用户 OS**）
+
+#### OS 探测
+
+跑：
+```bash
+uname -s
+```
+
+判定（包含匹配）：
+- `MINGW*` / `MSYS*` / `*_NT-*` → `windows`
+- `Darwin` → `macos`
+- `Linux` → `linux`
+
+`uname` 不可用（罕见）→ fallback `node -e "console.log(process.platform)"`，结果 `win32` / `darwin` / `linux` 直接用。
+
+记下来，后续步骤按这个走分支。
+
+#### 浏览器探测
+
+按探测到的 OS 跑：
+
+- **Windows**（MSYS bash / PowerShell）：
+  ```bash
+  command -v msedge   # Edge
+  command -v chrome    # Chrome
+  ```
+  Edge / Chrome 在 Windows 一般不在 PATH，找不到时 fallback 探常见路径：
+  ```bash
+  ls "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" 2>/dev/null
+  ls "C:/Program Files/Microsoft/Edge/Application/msedge.exe" 2>/dev/null
+  ls "C:/Program Files/Google/Chrome/Application/chrome.exe" 2>/dev/null
+  ```
+
+- **macOS**：
+  ```bash
+  ls "/Applications/Microsoft Edge.app" 2>/dev/null
+  ls "/Applications/Google Chrome.app" 2>/dev/null
+  ```
+
+- **Linux**：
+  ```bash
+  command -v msedge
+  command -v microsoft-edge
+  command -v microsoft-edge-stable
+  command -v google-chrome
+  command -v google-chrome-stable
+  ```
+  哪个返回非空就是装哪个。
+
+#### 判定浏览器
+
+- **两个都有** → 用 AskUserQuestion 单问题问用户用哪个
+- **只有一个有** → 自动选那个，告知用户："检测到 Edge，已选用"
+- **都没有** → 告知用户装一个，退出
+
+只有"两个都有"才调 AskUserQuestion：
+```json
+{
+  "questions": [
+    {
+      "question": "用哪个浏览器抓数据？两个都装好了。",
+      "header": "Browser",
+      "options": [
+        {"label": "Edge",   "description": "系统已装"},
+        {"label": "Chrome", "description": "系统已装"}
+      ],
+      "multiSelect": false
+    }
+  ]
+}
+```
+
+### Step 2：URL 校验（自然语言追问，不用 AskUserQuestion）
+
+用户消息里没有 mingshihuichuguo.com 网址，或网址不符合 `homework/student/<id>` 格式，**用自然语言追问一次**：
+
+> "请粘贴完整的 mingshihuichuguo.com 作业链接，格式：`https://mingshihuichuguo.com/homework/student/<数字>`"
+
+合法 URL：
+- `https://mingshihuichuguo.com/homework/student/10833`
+- `http://mingshihuichuguo.com/homework/student/10833`（http 也接受）
+
+非法（追问一次，第二次还错 → 礼貌拒绝并退出 skill）：
+- 域名不是 mingshihuichuguo.com
+- 路径不是 `/homework/student/<纯数字>`
+- 缺 student id
+
+**Step 1 + Step 2 都完成后才进"流程"。**
+
+
+## 环境检查与自动补装
+
+进"流程"前先检查依赖，缺的自动补：
+
+### 检查 1：playwright-cli
+
+- 跑 `npx playwright-cli --version` 或 `which playwright-cli` 检测
+- 不在 → **自动跑** `npm install -g @playwright/cli`，跑完再 --version 一次确认
+- 装失败 → npm 报错多半是 Node.js 没装或 PATH 不对，提示用户：
+  > "playwright-cli 装失败，大概率是 Node.js 没装或版本太旧。去 https://nodejs.org/ 下个 18+ 的 LTS 装上再来。"
+
+### 检查 2：cli.config.json
+
+按 Step 1 选的浏览器，写默认配置（OS 感知路径）：
+
+- Windows: `%USERPROFILE%\.playwright\cli.config.json`
+- macOS / Linux: `~/.playwright/cli.config.json`
+
+内容（按用户选的浏览器二选一）：
+
+```json
+{"browser": {"browserName": "msedge"}}   // Edge
+{"browser": {"browserName": "chrome"}}   // Chrome
+```
+
+文件已存在 → **不覆盖**（保留用户已有配置）。
+
+### 检查 3：浏览器本身
+
+Edge / Chrome 必须系统装了才能 attach CDP。skill 不自动装（要用户授权）：
+- 缺 Edge: 引导去 https://www.microsoft.com/edge
+- 缺 Chrome: 引导去 https://www.google.com/chrome
+- 装哪 / 怎么启 → 见 `references/数据获取.md` step 1
+
+**全部检查通过才进"流程"。**
 
 
 ## 流程
@@ -26,7 +160,7 @@ type: project
 ### 1. 拿数据
 
 参考 `references/数据获取.md`：
-- 用户已登录的情况下：用 playwright-cli attach 用户的 Edge（CDP 9222）
+- 用户已登录的情况下：用 playwright-cli attach 用户的浏览器（CDP 9222）
 - 用户没登录：让用户先登录，或者把内容粘贴成文件
 - 拿到每道错题的：题号 / 类型 / 题干 / 4 选项 / 学生答案 / 正确答案 / 原文
 

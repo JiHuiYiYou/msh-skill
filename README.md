@@ -37,28 +37,37 @@
 
 ## 安装
 
+### 一键安装（推荐）
+
+```bash
+npx skills add JiHuiYiYou/msh-skill@msh-exam-analysis
+```
+
+装完后重启 Claude Code（新 session）即可。
+
 ### 前置条件
 
 - [Claude Code](https://claude.com/claude-code) (CLI)
-- Edge 或 Chrome 浏览器
-- Node.js（装 playwright-cli）
+- Windows / macOS / Linux
+- Edge 或 Chrome 浏览器（任一 OS 都有）
+- Node.js 18+（playwright-cli 由 skill 触发时自动装）
 - `mingshihuichuguo.com` 账号（已登录到浏览器）
 
-### 步骤
+### 手动安装（不通过 `npx skills`）
 
 ```bash
 # 1. 装 playwright-cli
 npm install -g @playwright/cli
 
-# 2. 配置默认浏览器为 Edge
+# 2. 配置默认浏览器（Edge 或 Chrome，二选一）
 mkdir -p ~/.playwright
-# Linux / macOS:
-cat > ~/.playwright/cli.config.json <<'EOF'
-{"browser": {"browserName": "msedge"}}
-EOF
-# Windows (PowerShell):
+# Windows (PowerShell) — Edge:
 @'
 {"browser": {"browserName": "msedge"}}
+'@ | Out-File -Encoding utf8 ~/.playwright/cli.config.json
+# Windows (PowerShell) — Chrome:
+@'
+{"browser": {"browserName": "chrome"}}
 '@ | Out-File -Encoding utf8 ~/.playwright/cli.config.json
 
 # 3. 复制 skill 到 Claude Code 目录
@@ -69,7 +78,7 @@ cp -r msh-skill ~/.claude/skills/
 
 ### 验证
 
-打开 Claude Code，说"做一下模考错题分析"，如果 skill 触发（描述里看到 `homework/student/ URL from mingshihuichuguo` 相关的判断），就装好了。
+打开 Claude Code，粘贴 `https://mingshihuichuguo.com/homework/student/10833` 这种网址，skill 应该自动触发；如果没触发，描述里能看到 `mingshihuichuguo` / `错题分析` / `模考` 关键词。
 
 ## 使用
 
@@ -79,7 +88,7 @@ cp -r msh-skill ~/.claude/skills/
 
 - "做一下模考错题分析，<URL>"
 - "分析一下这次的错题，<URL>"
-- 直接粘贴错题相关内容
+- 直接粘贴 `https://mingshihuichuguo.com/homework/student/<id>` 网址
 
 `<URL>` 形如：`https://mingshihuichuguo.com/homework/student/11671`
 
@@ -87,12 +96,12 @@ cp -r msh-skill ~/.claude/skills/
 
 详细见 [`references/数据获取.md`](references/数据获取.md)。简单说：
 
-1. skill 启动一个 playwright-cli 进程，attach 到用户已登录的 Edge（CDP 9222）
+1. skill 启动一个 playwright-cli 进程，attach 到用户已登录的浏览器（CDP 9222）
 2. 自动切到"答题解析"标签，按 section 切到 4 个 part（阅读 M1 / M2、听力 M1 / M2）
 3. 逐题抓题号、题干、4 选项、学生答案、正确答案、原文
 4. 听力题点"原文"按钮抓 transcript，阅读题如果是图片则下载到 study 目录
 
-如果用户没登录 Edge，skill 会提示先登录，或者把内容粘贴成文件。
+如果用户没登录浏览器，skill 会提示先登录，或者把内容粘贴成文件。
 
 ### 风格控制
 
