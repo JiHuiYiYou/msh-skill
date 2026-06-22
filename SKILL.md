@@ -1,7 +1,6 @@
 ---
 name: msh-exam-analysis
 description: 模考错题分析（名师汇出国 / mingshihuichuguo.com）。用户必须提供 mingshihuichuguo.com/homework/student/<id> 网址（如 https://mingshihuichuguo.com/homework/student/10833），skill 按"手写版"人味风格产出阅读/听力错题分析 txt 到桌面。粘贴错题内容不触发。When the user mentions 错题分析 / 模考 / pastes a mingshihuichuguo URL, use this skill.
-type: project
 ---
 
 # MSH 模考错题分析
