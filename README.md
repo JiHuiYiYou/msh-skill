@@ -80,6 +80,46 @@ cp -r msh-skill ~/.claude/skills/
 
 打开 Claude Code，粘贴 `https://mingshihuichuguo.com/homework/student/10833` 这种网址，skill 应该自动触发；如果没触发，描述里能看到 `mingshihuichuguo` / `错题分析` / `模考` 关键词。
 
+## 故障排查
+
+### 装完 Claude Code 里看不到 skill
+
+按概率排：
+
+1. **没开新 session**。Claude Code 只在启动时扫 `~/.claude/skills/`，运行时新增的不认。`/exit` 软退出不算，要 Ctrl+C 彻底杀掉进程再重开。
+
+2. **Windows 没开 Developer Mode**。`npx skills` 装的时候要建 symlink，Windows 默认没权限会**静默失败**（CLI 输出 "Failed to install 1" 一行容易被忽略）。
+
+   开法：`Win + I` → 搜索"开发者" → 进"开发者选项" → 切到 Developer Mode。或管理员 PowerShell 跑 `start-process ms-settings:developers`。
+
+3. **symlink 真的没建上**。装完跑：
+   ```bash
+   ls -la ~/.claude/skills/ | grep msh
+   ```
+   没输出 = symlink 丢了。手动补：
+   ```bash
+   ln -s ~/.agents/skills/msh-exam-analysis ~/.claude/skills/msh-exam-analysis
+   ```
+
+### `npx skills add` 报 "Failed to connect to github.com"
+
+国内常见，Git for Windows 不读系统的 `HTTPS_PROXY`：
+
+```powershell
+git config --global http.proxy http://127.0.0.1:7890
+git config --global https.proxy http://127.0.0.1:7890
+```
+
+端口按你 clash 实际监听端口改。配完重跑 `npx skills add`。
+
+### 改完本地不生效
+
+```bash
+npx skills update msh-exam-analysis -g -y
+```
+
+拉新版到 `~/.agents/skills/`，再开新 session。
+
 ## 使用
 
 ### 触发
