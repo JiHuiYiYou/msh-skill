@@ -11,11 +11,25 @@
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-skill-purple)](#)
 [![License](https://img.shields.io/badge/license-MIT-green)](#license)
 
-[安装](#安装) · [使用](#使用) · [输出示例](#输出示例) · [项目结构](#项目结构) · [License](#license)
+[给 agent 装](#给-agent-装最省事) · [安装](#安装) · [使用](#使用) · [输出示例](#输出示例) · [项目结构](#项目结构) · [License](#license)
 
 </div>
 
 ---
+
+## 给 agent 装（最省事）
+
+把仓库 URL 丢给任意 agent（Claude Code / Cursor / Codex / Cline 等），说一句 "装这个 skill"，agent 会自己识别 SKILL.md 格式并跑 `npx skills add`。
+
+或者直接复制下面这段贴给 agent：
+
+```
+这个仓库 https://github.com/JiHuiYiYou/msh-skill 是一个 Claude Code skill，
+仓库根目录的 SKILL.md 是 skill 入口（name: msh-exam-analysis）。
+请用 `npx skills add JiHuiYiYou/msh-skill@msh-exam-analysis -g -y` 装上。
+```
+
+装完开新 session，粘贴 `https://mingshihuichuguo.com/homework/student/10833` 测一下能不能触发。
 
 ## 这是什么
 
@@ -95,13 +109,28 @@ cp -r msh-skill ~/.claude/skills/
    start-process ms-settings:developers
    ```
 
-4. **symlink 真的没建上**。装完跑：
+3. **symlink 真的没建上**。装完跑：
+
+   **bash / MSYS / WSL**：
    ```bash
    ls -la ~/.claude/skills/ | grep msh
    ```
+   **PowerShell**：
+   ```powershell
+   Get-ChildItem $env:USERPROFILE\.claude\skills -Force | Where-Object Name -like '*msh*'
+   ```
+
    没输出 = symlink 丢了。手动补：
+
+   **bash**：
    ```bash
    ln -s ~/.agents/skills/msh-exam-analysis ~/.claude/skills/msh-exam-analysis
+   ```
+   **PowerShell**（要 Developer Mode 或管理员）：
+   ```powershell
+   New-Item -ItemType SymbolicLink `
+     -Path "$env:USERPROFILE\.claude\skills\msh-exam-analysis" `
+     -Target "$env:USERPROFILE\.agents\skills\msh-exam-analysis"
    ```
 
 ### `npx skills add` 报 "Failed to connect to github.com"
