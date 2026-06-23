@@ -90,9 +90,12 @@ cp -r msh-skill ~/.claude/skills/
 
 2. **Windows 没开 Developer Mode**。`npx skills` 装的时候要建 symlink，Windows 默认没权限会**静默失败**（CLI 输出 "Failed to install 1" 一行容易被忽略）。
 
-   开法：`Win + I` → 搜索"开发者" → 进"开发者选项" → 切到 Developer Mode。或管理员 PowerShell 跑 `start-process ms-settings:developers`。
+   开法：管理员 PowerShell 跑：
+   ```powershell
+   start-process ms-settings:developers
+   ```
 
-3. **symlink 真的没建上**。装完跑：
+4. **symlink 真的没建上**。装完跑：
    ```bash
    ls -la ~/.claude/skills/ | grep msh
    ```
