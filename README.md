@@ -1,278 +1,76 @@
 <div align="center">
 
-# msh-exam-analysis
+# msh-skill
 
-### 名师汇出国模考错题分析 skill
+### 名师汇出国 自动化工具集
 
-**从 mingshihuichuguo.com 抓错题，按"手写版"人味风格产出分析报告**
+**错题分析 + 单词听写自动化**
 
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](#)
 [![Browser](https://img.shields.io/badge/browser-Edge%20%7C%20Chrome-blue)](#)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-skill-purple)](#)
-[![License](https://img.shields.io/badge/license-MIT-green)](#license)
-
-[给 agent 装](#给-agent-装最省事) · [安装](#安装) · [使用](#使用) · [输出示例](#输出示例) · [项目结构](#项目结构) · [License](#license)
 
 </div>
 
 ---
 
-## 给 agent 装（最省事）
+## 两个功能
 
-把仓库 URL 丢给任意 agent（Claude Code / Cursor / Codex / Cline 等），说一句 "装这个 skill"，agent 会自己识别 SKILL.md 格式并跑 `npx skills add`。
+### 1. 模考错题分析（`SKILL.md`）
 
-或者直接复制下面这段贴给 agent：
+从 `mingshihuichuguo.com/homework/student/<id>` 抓模考错题，按"手写版"人味风格产出阅读/听力分析 txt。
 
-```
-这个仓库 https://github.com/JiHuiYiYou/msh-skill 是一个 Claude Code skill，
-仓库根目录的 SKILL.md 是 skill 入口（name: msh-exam-analysis）。
-请用 `npx skills add JiHuiYiYou/msh-skill@msh-exam-analysis -g -y` 装上。
-```
+### 2. 单词测试自动化（`run_v5.js`）
 
-装完开新 session，粘贴 `https://mingshihuichuguo.com/homework/student/10833` 测一下能不能触发。
+自动完成 `mingshihuichuguo.com/homework-submission-items?homework_id=<id>` 的单词"混合测试"（听音译中 + 看词译中）。
 
-## 这是什么
-
-一个 [Claude Code skill](https://docs.claude.com/en/docs/claude-code/skills)，针对 **mingshihuichuguo.com**（名师汇出国）的模考作业，自动抓阅读 / 听力错题数据，按"手写版"风格生成两份错题分析 txt 到桌面。
-
-风格目标：**看起来像学生自己手抄的复习笔记，不是 AI 写的**。口语化错因、暴露思路过程、自嘲吐槽，只分析错的那个选项，不堆大段原文。
-
-## 解决的问题
-
-模考做完看错题时，逐题手写分析太慢；用通用 LLM 写又太"AI 味"——老师家长一眼能看出。本 skill 的目标是：**AI 抓数据 + 写，但风格像人写的**。
-
-5 份手写样本在 `手写错题分析/` 目录，AI 输出对照样本风格生成。
-
-## 适用场景
-
-- 名师汇出国的模考（含阅读 M1/M2、听力 M1/M2 四个 section）
-- 错题数量不限，但单次分析 ≥1 道才值得跑
-- 写作 / 口语不在范围内（用户不要求）
-
-## 安装
-
-### 一键安装（推荐）
-
+**使用**：
 ```bash
-npx skills add JiHuiYiYou/msh-skill@msh-exam-analysis
+# 1. Edge 带调试端口启动
+msedge --remote-debugging-port=9222
+
+# 2. 登录 mingshihuichuguo.com
+
+# 3. 连接 playwright-cli
+playwright-cli attach --cdp=http://localhost:9222
+
+# 4. 打开测试页面
+playwright-cli goto "https://mingshihuichuguo.com/homework-submission-items?homework_id=<ID>"
+
+# 5. 跑脚本
+playwright-cli run-code --filename=run_v5.js
+
+# 6. 跑完后点提交
+playwright-cli snapshot  # 找提交按钮 ref
+playwright-cli click eXX
 ```
 
-装完后重启 Claude Code（新 session）即可。
+**原理**：
+- 注入 `window.Audio` 构造器 hook 抓音频题的英文单词
+- 遍历 DOM 找文本题的英文单词
+- 调用有道词典 API 获取中文翻译
+- 通过 `getByRole('textbox').fill()` 填入答案
 
-### 前置条件
-
-- [Claude Code](https://claude.com/claude-code) (CLI)
-- Windows / macOS / Linux
-- Edge 或 Chrome 浏览器（任一 OS 都有）
-- Node.js 18+（playwright-cli 由 skill 触发时自动装）
-- `mingshihuichuguo.com` 账号（已登录到浏览器）
-
-### 手动安装（不通过 `npx skills`）
-
-```bash
-# 1. 装 playwright-cli
-npm install -g @playwright/cli
-
-# 2. 配置默认浏览器（Edge 或 Chrome，二选一）
-mkdir -p ~/.playwright
-# Windows (PowerShell) — Edge:
-@'
-{"browser": {"browserName": "msedge"}}
-'@ | Out-File -Encoding utf8 ~/.playwright/cli.config.json
-# Windows (PowerShell) — Chrome:
-@'
-{"browser": {"browserName": "chrome"}}
-'@ | Out-File -Encoding utf8 ~/.playwright/cli.config.json
-
-# 3. 复制 skill 到 Claude Code 目录
-cp -r msh-skill ~/.claude/skills/
-# Windows:
-# xcopy /E /I msh-skill %USERPROFILE%\.claude\skills\msh-skill
-```
-
-### 验证
-
-打开 Claude Code，粘贴 `https://mingshihuichuguo.com/homework/student/10833` 这种网址，skill 应该自动触发；如果没触发，描述里能看到 `mingshihuichuguo` / `错题分析` / `模考` 关键词。
-
-## 故障排查
-
-### 装完 Claude Code 里看不到 skill
-
-按概率排：
-
-1. **没开新 session**。Claude Code 只在启动时扫 `~/.claude/skills/`，运行时新增的不认。`/exit` 软退出不算，要 Ctrl+C 彻底杀掉进程再重开。
-
-2. **Windows 没开 Developer Mode**。`npx skills` 装的时候要建 symlink，Windows 默认没权限会**静默失败**（CLI 输出 "Failed to install 1" 一行容易被忽略）。
-
-   开法：管理员 PowerShell 跑：
-   ```powershell
-   start-process ms-settings:developers
-   ```
-
-3. **symlink 真的没建上**。装完跑：
-
-   **bash / MSYS / WSL**：
-   ```bash
-   ls -la ~/.claude/skills/ | grep msh
-   ```
-   **PowerShell**：
-   ```powershell
-   Get-ChildItem $env:USERPROFILE\.claude\skills -Force | Where-Object Name -like '*msh*'
-   ```
-
-   没输出 = symlink 丢了。手动补：
-
-   **bash**：
-   ```bash
-   ln -s ~/.agents/skills/msh-exam-analysis ~/.claude/skills/msh-exam-analysis
-   ```
-   **PowerShell**（要 Developer Mode 或管理员）：
-   ```powershell
-   New-Item -ItemType SymbolicLink `
-     -Path "$env:USERPROFILE\.claude\skills\msh-exam-analysis" `
-     -Target "$env:USERPROFILE\.agents\skills\msh-exam-analysis"
-   ```
-
-### `npx skills add` 报 "Failed to connect to github.com"
-
-国内常见，Git for Windows 不读系统的 `HTTPS_PROXY`：
-
-```powershell
-git config --global http.proxy http://127.0.0.1:7890
-git config --global https.proxy http://127.0.0.1:7890
-```
-
-端口按你 clash 实际监听端口改。配完重跑 `npx skills add`。
-
-### 改完本地不生效
-
-```bash
-npx skills update msh-exam-analysis -g -y
-```
-
-拉新版到 `~/.agents/skills/`，再开新 session。
-
-## 使用
-
-### 触发
-
-在 Claude Code 里说：
-
-- "做一下模考错题分析，<URL>"
-- "分析一下这次的错题，<URL>"
-- 直接粘贴 `https://mingshihuichuguo.com/homework/student/<id>` 网址
-
-`<URL>` 形如：`https://mingshihuichuguo.com/homework/student/11671`
-
-### 数据获取流程
-
-详细见 [`references/数据获取.md`](references/数据获取.md)。简单说：
-
-1. skill 启动一个 playwright-cli 进程，attach 到用户已登录的浏览器（CDP 9222）
-2. 自动切到"答题解析"标签，按 section 切到 4 个 part（阅读 M1 / M2、听力 M1 / M2）
-3. 逐题抓题号、题干、4 选项、学生答案、正确答案、原文
-4. 听力题点"原文"按钮抓 transcript，阅读题如果是图片则下载到 study 目录
-
-如果用户没登录浏览器，skill 会提示先登录，或者把内容粘贴成文件。
-
-### 风格控制
-
-完整规范见 [`references/style-guide.md`](references/style-guide.md)。最关键的 5 条：
-
-1. **不要大段原文**。最多贴 1-2 句关键引文。
-2. **只分析错的那一项**。其它选项不写。
-3. **表述口语化**。"脑子一抽就想到..."、"被 X 带跑了"。
-4. **生词随便一点**。一行一个 `word 中文`，不写音标不写三栏。
-5. **不用 AI 符号**。避开 → ✔ ✘ ─ 【】 ■。
-
-## 输出示例
-
-输出两份 txt 到 `~/Desktop/`（Windows = `C:\Users\<你>\Desktop\`）：
-
-### `阅读.txt`
-
-```
-M1
-填词
-
-1）9/10. 错了第一个, "A vib____ period" 我没反应过来, 看到 vib 想到
-diabolic/symbolic 这类 -olic 结尾的词, 就填了 olic, 整个是 vibolic 完全
-不是单词. 应该是 vibrant, 词根 vibr- 是震动, 引申活泼鲜明.
-
-翻译:
-文艺复兴是欧洲14到17世纪的文化复兴时期, 文化、艺术和智识上全面复苏,
-强调人文主义和个人成就.
-
-生词:
-Renaissance 文艺复兴
-vibrant 充满活力的
-intellectual 智识的
-humanism 人本主义
-
-
-M1
-学术阅读
-(材料: 太阳与双星系统, 4 段)
-
-13）题: 关于太阳"此前被广泛接受的结论"最有可能是哪个.
-我选 B (The Sun is part of a binary system).
-
-错因: 我把"surprising implications for..."理解成"新发现说明太阳属于双星".
-但题干锁定的就是"previously accepted"旧观点, 原文既然"新发现"是恒星普遍成对,
-那"旧观点"必然是反过来的"太阳是单星". 正确答案 A 就是这个.
-
-主旨: 新观测发现年轻恒星几乎全是双星, 挑战了"太阳是单星"的旧共识.
-```
-
-### `听力.txt`
-
-```
-M1
-听并回应
-
-3）原文: I hear that the local gym has new equipment.
-我选A
-听到器材脑子就想到"被放哪", 完全没意识到这是社交分享. 人家说"听说有"期待
-的是"我也有兴趣要去看"那种承接. A 跑题了.
-
-
-M2
-讲座
-
-14）讲座主题: tardigrade（缓步动物）的生存能力, 分三块——极端环境耐受、
-cryptobiosis 机制、研究意义.
-
-我选A
-被"tardigrades were sent to the harsh realms of space"吸住, 看到"first
-discovered"就套到 space 那段. 但题干问 radiation 的应用, 应该回到"radiation
-therapy for cancer patients". space 那段是顺带提的另一条线.
-```
+**踩过的坑**：
+- 页面输入框是 `<textarea>` 不是 `<input>`，`querySelector('input')` 永远 null
+- `addInitScript` + `page.reload()` 会触发反作弊弹窗，改用在当前页 `page.evaluate` 注入
+- `page.evaluate` + `nativeInputValueSetter` 填值不会触发页面保存事件，必须用 `getByRole('textbox').fill()`
 
 ## 项目结构
 
 ```
 msh-skill/
-├── SKILL.md                       # skill 主入口（Claude Code 读这个）
+├── SKILL.md                       # skill 主入口（错题分析）
 ├── README.md                      # 本文件
+├── run_v5.js                      # 单词测试自动化脚本
 ├── LICENSE                        # MIT
 ├── references/
-│   ├── style-guide.md             # 人味 vs AI 味详细对照 + 自检清单
+│   ├── style-guide.md             # 人味 vs AI 味风格指南
 │   ├── 数据获取.md                # playwright-cli 抓题流程
-│   └── 模板对照.md                # 手写版 vs AI 版 vs 目标版
-└── 手写错题分析/                  # 5 份原始手写样本
-    ├── README.md
-    ├── 听力1.txt
-    ├── 听力2.txt
-    ├── 阅读1.txt
-    ├── 阅读2.txt
-    └── 阅读3.txt
+│   └── 模板对照.md                # 手写版 vs AI 版对照
+├── scripts/                       # 辅助脚本
+└── 手写错题分析/                  # 5 份手写样本
 ```
-
-## 贡献
-
-改风格前先读 `references/style-guide.md` 的"人味 vs AI 味"对照表。手写样本在 `手写错题分析/`，AI 输出对照样本风格生成。
-
-新题型加在 `SKILL.md` 的"题型处理"小节 + `references/模板对照.md` 的"小结"表格里。
 
 ## License
 
