@@ -14,6 +14,29 @@
 
 ---
 
+---
+
+## 给 agent 装（最省事）
+
+把仓库 URL 丢给任意 agent（Claude Code / Cursor / Codex / Cline 等），说一句 "装这个 skill"，agent 会自己识别 SKILL.md 格式并跑 `npx skills add`。
+
+或者直接复制下面这段贴给 agent：
+
+```
+这个仓库 https://github.com/JiHuiYiYou/msh-skill 是一个 Claude Code skill，
+仓库根目录的 SKILL.md 是 skill 入口（name: msh-exam-analysis）。
+请用 `npx skills add JiHuiYiYou/msh-skill@msh-exam-analysis -g -y` 装上。
+```
+
+装完开新 session，说"错题分析"或"单词听写"即可触发。
+
+### 手动安装
+
+```bash
+npm install -g @playwright/cli
+cp -r msh-skill ~/.claude/skills/
+```
+
 ## 两个功能
 
 ### 1. 模考错题分析（`SKILL.md`）
@@ -22,39 +45,7 @@
 
 ### 2. 单词测试自动化（`run_v5.js`）
 
-自动完成 `mingshihuichuguo.com/homework-submission-items?homework_id=<id>` 的单词"混合测试"（听音译中 + 看词译中）。
-
-**使用**：
-```bash
-# 1. Edge 带调试端口启动
-msedge --remote-debugging-port=9222
-
-# 2. 登录 mingshihuichuguo.com
-
-# 3. 连接 playwright-cli
-playwright-cli attach --cdp=http://localhost:9222
-
-# 4. 打开测试页面
-playwright-cli goto "https://mingshihuichuguo.com/homework-submission-items?homework_id=<ID>"
-
-# 5. 跑脚本
-playwright-cli run-code --filename=run_v5.js
-
-# 6. 跑完后点提交
-playwright-cli snapshot  # 找提交按钮 ref
-playwright-cli click eXX
-```
-
-**原理**：
-- 注入 `window.Audio` 构造器 hook 抓音频题的英文单词
-- 遍历 DOM 找文本题的英文单词
-- 调用有道词典 API 获取中文翻译
-- 通过 `getByRole('textbox').fill()` 填入答案
-
-**踩过的坑**：
-- 页面输入框是 `<textarea>` 不是 `<input>`，`querySelector('input')` 永远 null
-- `addInitScript` + `page.reload()` 会触发反作弊弹窗，改用在当前页 `page.evaluate` 注入
-- `page.evaluate` + `nativeInputValueSetter` 填值不会触发页面保存事件，必须用 `getByRole('textbox').fill()`
+自动完成 `homework-submission-items?homework_id=<id>` 的单词"混合测试"（听音译中 + 看词译中）。用法见 `SKILL.md` 功能二。
 
 ## 项目结构
 
