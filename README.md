@@ -37,6 +37,22 @@ npm install -g @playwright/cli
 cp -r msh-skill ~/.claude/skills/
 ```
 
+## 更新
+
+一行命令，自动从 GitHub 拉最新版：
+
+```bash
+npx skills update msh-exam-analysis -g -y
+```
+
+一键更新所有已装的 skill：
+
+```bash
+npx skills upgrade -g -y
+```
+
+只要当初用 `npx skills add ...` 装的，`skills` CLI 会自动记来源仓库，直接 `update` 就能升级，不用配 git / 代理。
+
 ## 两个功能
 
 ### 1. 模考错题分析（`SKILL.md`）
