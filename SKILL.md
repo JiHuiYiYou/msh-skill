@@ -367,14 +367,17 @@ playwright-cli attach --cdp=http://localhost:9222
 
 如果改了 SKILL.md 末尾的内嵌版本，重新 Write 一遍覆盖文件即可（保留 source-of-truth 在项目根 `~/Desktop/coding/msh-skill/run_v5.js` ↔ `SKILL.md` 末尾内嵌区块，保持两份同步）。
 
-### 2. 打开测试页面并跑脚本
+### 2. 打开页面 + 跑脚本（一发 bash，禁止中间 round trip）
 
 ```bash
-playwright-cli goto "https://mingshihuichuguo.com/homework-submission-items?homework_id=<ID>"
-playwright-cli run-code --filename="$HOME/.agents/skills/msh-exam-analysis/run_v5.js"
+playwright-cli goto "https://mingshihuichuguo.com/homework-submission-items?homework_id=<ID>" && playwright-cli run-code --filename="$HOME/.agents/skills/msh-exam-analysis/run_v5.js"
 ```
 
-脚本 3 分钟左右跑完 40 题，结果如 `OK: 39/40`。
+`&&` 串行：goto 阻塞等页面 ready 后才进 run-code，**两条命令之间的间隙被压成 0**。
+
+✅ 一发 bash 后脚本开始跑，**30 秒-3 分钟**出 `OK: N/40`。
+
+❌ 不准在 goto 和 run-code 之间发任何额外命令（eval / console / snapshot 都是浪费 round trip）。脚本会自己处理首次加载，等 `waitForTimeout(1200)` × 第一题足够。
 
 ### 3. 提交（一发 eval 搞定，禁止走弯路）
 
