@@ -24,16 +24,12 @@ async (page) => {
   let ok = 0;
 
   for (let i = 0; i < 40; i++) {
-    // Wait a bit for page to settle
     await page.waitForTimeout(1200);
 
-    // Get word: search for English word in question container
     let word = await page.evaluate(() => {
-      // Audio hook first
       const w = window.__word;
       window.__word = null;
       if (w) return w;
-      // Search all elements near input for standalone English word
       const inp = document.querySelector('textarea, input[type="text"]');
       let el = inp;
       while (el && el !== document.body) {
@@ -47,7 +43,6 @@ async (page) => {
       return null;
     });
 
-    // Click play button if no word yet
     if (!word) {
       try {
         await page.locator('button').filter({ has: page.locator('img') }).first().click({ timeout: 3000 });

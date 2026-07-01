@@ -356,11 +356,22 @@ powershell -Command "Stop-Process -Name msedge -Force; Start-Process 'msedge' -A
 playwright-cli attach --cdp=http://localhost:9222
 ```
 
+### 1.5 脚本准备（一次性，幂等）
+
+`npx skills add` 只装 SKILL.md 进 skill 目录，**不会装 `run_v5.js`**。第一次跑前要落地脚本：
+
+1. 检查 `$HOME/.agents/skills/msh-exam-analysis/run_v5.js` 是否存在
+2. 不存在 → Read 本 SKILL.md 末尾的 `## run_v5 内嵌版本` 章节
+3. 把整段 JS 代码 Write 到 `$HOME/.agents/skills/msh-exam-analysis/run_v5.js`
+4. 后续调用一律用 `--filename=$HOME/.agents/skills/msh-exam-analysis/run_v5.js` 绝对路径，不再依赖 cwd
+
+如果改了 SKILL.md 末尾的内嵌版本，重新 Write 一遍覆盖文件即可（保留 source-of-truth 在项目根 `~/Desktop/coding/msh-skill/run_v5.js` ↔ `SKILL.md` 末尾内嵌区块，保持两份同步）。
+
 ### 2. 打开测试页面并跑脚本
 
 ```bash
 playwright-cli goto "https://mingshihuichuguo.com/homework-submission-items?homework_id=<ID>"
-playwright-cli run-code --filename=run_v5.js
+playwright-cli run-code --filename="$HOME/.agents/skills/msh-exam-analysis/run_v5.js"
 ```
 
 脚本 3 分钟左右跑完 40 题，结果如 `OK: 39/40`。
@@ -411,3 +422,102 @@ run_v5.js 返回 `OK: N/40` 那一刻起，agent 行为严格限定：
 3. **不用 `page.evaluate` + `nativeInputValueSetter` 填值**——值设进去了但页面 Livewire/Alpine 不认，答案不保存。必须用 `page.getByRole('textbox').fill()`
 4. **play button locator**：`page.locator('button').filter({has: page.locator('img')}).first()` 不稳定，可改用 `page.$$('button')` + `btn.$('svg')` 或 `btn.$('img')` 找播放按钮
 5. **第一题偶尔漏**：页面自动播放音频时，Audio hook 可能还没注入。可增大首次等待时间到 2-3 秒
+
+
+## run_v5 内嵌版本
+
+`npx skills add` 不装 JS 文件，agent 按"### 1.5 脚本准备"说明的步骤把这段代码 Write 到 `$HOME/.agents/skills/msh-exam-analysis/run_v5.js`。改脚本：项目根 `run_v5.js` 和这里**两端保持同步**——代码块边界用 ```js 起始 + ``` 结束，agent 提取时按这两个标记剥壳。
+
+```js
+// V5: No reload - inject Audio hook via evaluate, use getByRole('textbox').fill()
+async (page) => {
+  const ctx = page.context();
+
+  async function tr(word) {
+    try {
+      const u = 'https://dict.youdao.com/jsonapi?q=' + encodeURIComponent(word) + '&le=eng&dicts=%7B%22count%22%3A99%2C%22dicts%22%3A%5B%5B%22ec%22%5D%5D%7D';
+      const r = await ctx.request.get(u);
+      const d = await r.json();
+      const raw = d?.ec?.word?.[0]?.trs?.[0]?.tr?.[0]?.l?.i?.[0] || '';
+      return raw.replace(/^[a-z]+\.\s*/i, '').split('；')[0].split('，')[0].trim();
+    } catch(e) { return null; }
+  }
+
+  // Inject Audio hook WITHOUT reload - works for current page session
+  await page.evaluate(() => {
+    const OrigAudio = window.Audio;
+    window.Audio = function(src) {
+      window.__word = (src || '').match(/audio=([^&]+)/)?.[1] || null;
+      return new OrigAudio(src);
+    };
+  });
+
+  let ok = 0;
+
+  for (let i = 0; i < 40; i++) {
+    await page.waitForTimeout(1200);
+
+    let word = await page.evaluate(() => {
+      const w = window.__word;
+      window.__word = null;
+      if (w) return w;
+      const inp = document.querySelector('textarea, input[type="text"]');
+      let el = inp;
+      while (el && el !== document.body) {
+        const children = el.parentElement ? Array.from(el.parentElement.children) : [];
+        for (const child of children) {
+          const t = (child.textContent || '').trim();
+          if (/^[a-zA-Z][a-zA-Z-]*[a-zA-Z]$/.test(t)) return t;
+        }
+        el = el.parentElement;
+      }
+      return null;
+    });
+
+    if (!word) {
+      try {
+        await page.locator('button').filter({ has: page.locator('img') }).first().click({ timeout: 3000 });
+        await page.waitForTimeout(3000);
+        word = await page.evaluate(() => {
+          const w = window.__word;
+          window.__word = null;
+          return w;
+        });
+        if (!word) {
+          word = await page.evaluate(() => {
+            const inp = document.querySelector('textarea, input[type="text"]');
+            let el = inp;
+            while (el && el !== document.body) {
+              const children = el.parentElement ? Array.from(el.parentElement.children) : [];
+              for (const child of children) {
+                const t = (child.textContent || '').trim();
+                if (/^[a-zA-Z][a-zA-Z-]*[a-zA-Z]$/.test(t)) return t;
+              }
+              el = el.parentElement;
+            }
+            return null;
+          });
+        }
+      } catch(e) {}
+    }
+
+    console.log('Q' + (i+1) + ': ' + (word || '??'));
+
+    if (word) {
+      const translation = await tr(word);
+      if (translation) {
+        await page.getByRole('textbox').fill(translation);
+        ok++;
+        console.log('  -> ' + translation);
+      }
+    }
+
+    try {
+      await page.getByRole('button', { name: /下一题|下一步/ }).click({ timeout: 2000 });
+    } catch(e) {}
+    await page.waitForTimeout(700);
+  }
+
+  return 'OK: ' + ok + '/40';
+}
+```
