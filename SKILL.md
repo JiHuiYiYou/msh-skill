@@ -365,12 +365,30 @@ playwright-cli run-code --filename=run_v5.js
 
 脚本 3 分钟左右跑完 40 题，结果如 `OK: 39/40`。
 
-### 3. 提交
+### 3. 提交（一发 eval 搞定，禁止走弯路）
 
 ```bash
-playwright-cli snapshot  # 确认 40/40 已答，找"提交"按钮 ref
-playwright-cli click eXX # 点击提交
+playwright-cli --s=default eval "async () => {
+  const btn = Array.from(document.querySelectorAll('button'))
+    .find(b => b.textContent.trim() === '提交');
+  if (!btn) return 'NO SUBMIT BTN; body=' + document.body.innerText.split('\\n').slice(0,15).join(' | ');
+  btn.click();
+  await new Promise(r => setTimeout(r, 1500));
+  return document.body.innerText.includes('测试完成') ? 'submitted OK' : 'clicked, awaiting';
+}"
 ```
+
+跑完这发 eval 直接汇报用户，**不要**再 round trip 确认。
+
+### 功能二硬约束（衔接空隙专用）
+
+run_v5.js 返回 `OK: N/40` 那一刻起，agent 行为严格限定：
+
+- ✅ 立即一发 eval：点提交 + 等"测试完成"出现，一把搞定
+- ❌ **不准 `playwright-cli console`**——page console 的 LOG 全是站点自己的噪音，脚本里 `console.log` 不会冒到 playwright 的 console 流里，这条命令稳 0 命中
+- ❌ **不准 `eval` 先查"已答题数 40/40"**——40/40 是脚本自己保证的，agent 多查一次只是浪费 round trip
+- ❌ **不准 `eval` 单独找确认对话框**——提交后"测试完成"页直接出现，没有弹窗
+- ❌ **不准 `playwright-cli snapshot`**——跟功能一的禁令同理，eval 一把搞定的事别落盘 yml
 
 ### 4. 多个 list
 
